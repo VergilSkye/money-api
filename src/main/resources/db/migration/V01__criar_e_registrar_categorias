@@ -1,5 +1,5 @@
 CREATE TABLE categoria (
-    id bigint PRIMARY KEY,
+    id bigserial PRIMARY KEY,
     nome varchar(50) NOT NULL
 );
 
