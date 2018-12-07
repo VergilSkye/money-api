@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
@@ -38,7 +37,6 @@ public class CategoriaResource {
 
 
         publisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaSalva.getId()));
-
         return ResponseEntity.status(HttpStatus.CREATED).body(categoriaSalva);
     }
 
@@ -56,4 +54,10 @@ public class CategoriaResource {
 
 
     }
+    @DeleteMapping("/{codigo}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable long codigo){
+        categoriaRepository.deleteById(codigo);
+    }
+
 }
