@@ -1,7 +1,10 @@
 package com.java.vergilmoney.api.repository;
 
-import com.java.vergilmoney.api.model.Lancamento;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface LancamentoRepository extends JpaRepository<Lancamento, Long> {
+import com.java.vergilmoney.api.model.Lancamento;
+import com.java.vergilmoney.api.repository.lancamento.LancamentoRepositoryQuery;
+
+public interface LancamentoRepository extends JpaRepository<Lancamento, Long>, LancamentoRepositoryQuery {
+
 }

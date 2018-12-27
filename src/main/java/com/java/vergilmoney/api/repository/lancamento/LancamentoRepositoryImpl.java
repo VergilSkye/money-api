@@ -1,6 +1,7 @@
 package com.java.vergilmoney.api.repository.lancamento;
 
 import com.java.vergilmoney.api.model.Lancamento;
+import com.java.vergilmoney.api.model.Lancamento_;
 import com.java.vergilmoney.api.repository.filter.LancamentoFilter;
 import org.springframework.util.StringUtils;
 
@@ -38,15 +39,17 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
         List<Predicate> predicates = new ArrayList<Predicate>();
 
         if(!StringUtils.isEmpty(lancamentoFilter.getDescricao())){
-
+                predicates.add(builder.like(
+                        builder.lower(root.get(Lancamento_.descricao)),"%"+lancamentoFilter.getDescricao().toLowerCase()+"%"));
         }
 
-        if(!StringUtils.isEmpty(lancamentoFilter.getDataVencimentoDe())){
-
+        if(lancamentoFilter.getDataVencimentoDe()!=null){
+            predicates.add(builder.greaterThanOrEqualTo(root.get(Lancamento_.dataVencimento),lancamentoFilter.getDataVencimentoDe()));
         }
 
-        if(!StringUtils.isEmpty(lancamentoFilter.getDataVencimentoAte())){
-
+        if(lancamentoFilter.getDataVencimentoAte()!=null){
+            predicates.add(
+                    builder.lessThanOrEqualTo(root.get(Lancamento_.dataVencimento), lancamentoFilter.getDataVencimentoAte()));
         }
         return predicates.toArray(new Predicate[predicates.size()]);
     }
