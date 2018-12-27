@@ -3,6 +3,7 @@ package com.java.vergilmoney.api.exceptionhandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.apache.commons.lang3.exception.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,11 +54,17 @@ public class MoneyExceptionHandler extends ResponseEntityExceptionHandler {
 
         String mensagemUsuario = messageSource.getMessage("recurso.nao-encontrado", null, LocaleContextHolder.getLocale());
         String mensagemDev = ex.toString();
-
-        System.out.println(mensagemUsuario + mensagemDev);
         List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDev));
         return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 
+    }
+
+    @ExceptionHandler({DataIntegrityViolationException.class})
+    public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request){
+        String mensagemUsuario = messageSource.getMessage("recurso.operacacao-nao-permitida", null, LocaleContextHolder.getLocale());
+        String mensagemDev = ExceptionUtils.getRootCauseMessage(ex);
+        List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDev));
+        return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST , request);
     }
 
     private List<Erro> criarListaDeErros(BindingResult bindingResult) {
