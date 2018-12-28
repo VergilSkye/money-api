@@ -2,8 +2,10 @@ package com.java.vergilmoney.api.resource;
 
 import com.java.vergilmoney.api.event.RecursoCriadoEvent;
 import com.java.vergilmoney.api.exceptionhandler.MoneyExceptionHandler;
+
 import com.java.vergilmoney.api.model.Lancamento;
 import com.java.vergilmoney.api.repository.LancamentoRepository;
+
 import com.java.vergilmoney.api.repository.filter.LancamentoFilter;
 import com.java.vergilmoney.api.service.LancamentoService;
 import com.java.vergilmoney.api.service.exception.PessoaInexistenteOuInativaException;
@@ -11,16 +13,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/lancamentos")
@@ -39,12 +43,12 @@ public class LancamentoResource {
     private MessageSource messageSource;
 
     @GetMapping
-    public List<Lancamento> pesquisar(LancamentoFilter lancamentoFilter) {
-        return lancamentoRepository.filtrar(lancamentoFilter);
+    public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable) {
+        return lancamentoRepository.filtrar(lancamentoFilter, pageable);
     }
 
     @GetMapping("/{codigo}")
-    public ResponseEntity<Lancamento> buscarPeloCodigo(@PathVariable long codigo) {
+    public ResponseEntity<Lancamento> buscarPeloCodigo(@PathVariable Long codigo) {
 
         Optional<Lancamento> lac = lancamentoRepository.findById(codigo);
         if (lac.isPresent()) {
@@ -62,12 +66,18 @@ public class LancamentoResource {
         return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSalvo);
     }
 
-    @ExceptionHandler({PessoaInexistenteOuInativaException.class })
-    public ResponseEntity<Object> handlePessoaInexistenteOuInativaException(PessoaInexistenteOuInativaException ex ){
+    @ExceptionHandler({PessoaInexistenteOuInativaException.class})
+    public ResponseEntity<Object> handlePessoaInexistenteOuInativaException(PessoaInexistenteOuInativaException ex) {
         String mensagemUsuario = messageSource.getMessage("pessoa.inexistente-ou-inativa", null, LocaleContextHolder.getLocale());
         String mensagemDev = ex.toString();
         List<MoneyExceptionHandler.Erro> erros = Arrays.asList(new MoneyExceptionHandler.Erro(mensagemUsuario, mensagemDev));
         return ResponseEntity.badRequest().body(erros);
+    }
+
+    @DeleteMapping("/{codigo}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long codigo) {
+        lancamentoRepository.deleteById(codigo);
     }
 
 }
