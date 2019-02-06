@@ -1,0 +1,24 @@
+{
+  "groups": [
+    {
+      "name": "vergilmoney",
+      "type": "com.java.vergilmoney.api.config.property.VergilMoneyApiProperty",
+      "sourceType": "com.java.vergilmoney.api.config.property.VergilMoneyApiProperty"
+    },
+    {
+      "name": "vergilmoney.seguranca",
+      "type": "com.java.vergilmoney.api.config.property.VergilMoneyApiProperty$Seguranca",
+      "sourceType": "com.java.vergilmoney.api.config.property.VergilMoneyApiProperty",
+      "sourceMethod": "getSeguranca()"
+    }
+  ],
+  "properties": [
+    {
+      "name": "vergilmoney.origin-permitida",
+      "type": "java.lang.String",
+      "sourceType": "com.java.vergilmoney.api.config.property.VergilMoneyApiProperty",
+      "defaultValue": "http:\/\/localhost:8000"
+    }
+  ],
+  "hints": []
+}
