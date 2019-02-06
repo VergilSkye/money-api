@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +20,9 @@ import java.util.Optional;
 @RequestMapping("/categorias")
 public class CategoriaResource {
 
+
+
+
     @Autowired
     private CategoriaRepository categoriaRepository;
 
@@ -26,12 +30,14 @@ public class CategoriaResource {
     private ApplicationEventPublisher publisher;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
     public List<Categoria> listar() {
         return categoriaRepository.findAll();
 
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA') and #oauth2.hasScope('write')")
     public ResponseEntity<Categoria> criar(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
         Categoria categoriaSalva = categoriaRepository.save(categoria);
 
@@ -42,6 +48,7 @@ public class CategoriaResource {
 
 
     @GetMapping("/{codigo}")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
     public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
 
         Optional<Categoria> cat = categoriaRepository.findById(codigo);
@@ -53,11 +60,6 @@ public class CategoriaResource {
         }
 
 
-    }
-    @DeleteMapping("/{codigo}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void remover(@PathVariable long codigo){
-        categoriaRepository.deleteById(codigo);
     }
 
 }

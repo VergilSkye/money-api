@@ -21,7 +21,6 @@ public class LancamentoService {
     public Lancamento salvar(Lancamento lancamento) {
 
         Optional<Pessoa> pes = pessoaRepository.findById(lancamento.getPessoa().getId());
-        System.out.println(lancamento.getPessoa().getId() + "AAAAAAAAAAAA");
         Pessoa pessoa;
         if (pes.isPresent()) {
             pessoa = pes.get();
