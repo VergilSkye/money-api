@@ -18,12 +18,6 @@
       "type": "java.lang.String",
       "sourceType": "com.java.vergilmoney.api.config.property.VergilMoneyApiProperty",
       "defaultValue": "http:\/\/localhost:8000"
-    },
-    {
-      "name": "vergilmoney.seguranca.enable-https",
-      "type": "java.lang.Boolean",
-      "sourceType": "com.java.vergilmoney.api.config.property.VergilMoneyApiProperty$Seguranca",
-      "defaultValue": false
     }
   ],
   "hints": []
